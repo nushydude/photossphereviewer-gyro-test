@@ -4,7 +4,19 @@ import React from 'react';
 import styled, { createGlobalStyle } from 'styled-components'; 
 import { isIOS, isMobileSafari, isSafari, isIPad13 } from 'react-device-detect';
 import * as PhotoSphereViewer from 'photo-sphere-viewer';
+import eruda from 'eruda';
 import panorama from './assets/f4399f2b0b4bd8ba8406908b798add0b.jpg';
+
+eruda.init({
+  tool: ['console', 'elements'],
+  useShadowDom: true,
+  autoScale: true,
+  defaults: {
+    displaySize: 50,
+    transparency: 0.9,
+    theme: 'Monokai Pro',
+  },
+});
 
 const defaultPanoOptions = {
   time_anim: false,
@@ -16,10 +28,6 @@ const defaultPanoOptions = {
 };
 
 class App extends React.Component {
-  state = {
-    gyroEnabled: false,
-  }
-
   photoSphereViewer = null;
 
   componentDidMount() {
@@ -45,11 +53,6 @@ class App extends React.Component {
     this.photoSphereViewer.on('ready', () => {
       window.addEventListener('resize', this.onResize, false);
     });
-
-    this.photoSphereViewer.on('gyroscope-updated', (enabled: any) => {
-      this.setState({ gyroEnabled: enabled });
-    });
-
   };
 
   onResize = () => {
@@ -75,44 +78,48 @@ class App extends React.Component {
   };
 
   setGyroscopeControl = (enable: boolean) => {
-    if (this.photoSphereViewer) {
-      if (enable) {
-        this.photoSphereViewer.startGyroscopeControl().catch(() => {
-          if ((isIOS && isMobileSafari) || (isIPad13 && isSafari)) {
-            if (
-              // @ts-ignore
-              window.DeviceOrientationEvent !== undefined &&
-              // @ts-ignore
-              typeof window.DeviceOrientationEvent.requestPermission ===
-                'function'
-            ) {
-              // @ts-ignore
-              window.DeviceOrientationEvent.requestPermission().then(
-                (response) => {
-                  if (response !== 'granted') {
-                    this.showGyroErrorAlert(
-                      'Gyroscope permissions have been denied. Please clear the website data from Settings -> Safari -> Advanced -> Website Data, then make sure to refresh the page and tap the Gyroscope icon.'
-                    );
-                  } else {
-                    window.location.reload();
-                  }
-                }
+    if (!this.photoSphereViewer) {
+      return;
+    }
+
+    if (enable) {
+      this.photoSphereViewer.startGyroscopeControl().catch(this.handleGyroEnableError);
+    } else {
+      // this runs without errors even if gyro is unavailable, so no need to catch it
+      this.photoSphereViewer.stopGyroscopeControl();
+    }    
+  };
+
+  handleGyroEnableError = () => {
+    if ((isIOS && isMobileSafari) || (isIPad13 && isSafari)) {
+      if (
+        // @ts-ignore
+        window.DeviceOrientationEvent !== undefined &&
+        // @ts-ignore
+        typeof window.DeviceOrientationEvent.requestPermission ===
+          'function'
+      ) {
+        // @ts-ignore
+        window.DeviceOrientationEvent.requestPermission().then(
+          (response) => {
+            if (response !== 'granted') {
+              this.showGyroErrorAlert(
+                'Gyroscope permissions have been denied. Please clear the website data from Settings -> Safari -> Advanced -> Website Data, then make sure to refresh the page and tap the Gyroscope icon.'
               );
             } else {
-              this.showGyroErrorAlert(
-                'Please enable Motion & Orientation Access from Settings -> Safari, then make sure to refresh the page and tap the Gyroscope icon.'
-              );
+              window.location.reload();
             }
-          } else {
-            this.showGyroErrorAlert('The Gyroscope is not supported on this device.');
           }
-        });
+        );
       } else {
-        // this runs without errors even if gyro is unavailable, so no need to catch it
-        this.photoSphereViewer.stopGyroscopeControl();
+        this.showGyroErrorAlert(
+          'Please enable Motion & Orientation Access from Settings -> Safari, then make sure to refresh the page and tap the Gyroscope icon.'
+        );
       }
+    } else {
+      this.showGyroErrorAlert('The Gyroscope is not supported on this device.');
     }
-  };
+  }
 
   showGyroErrorAlert = (message: string) => {
     window.alert(message);
@@ -169,7 +176,7 @@ class App extends React.Component {
           <Button
             onClick={() => {
               if (this.photoSphereViewer) {
-                this.setGyroscopeControl(!this.state.gyroEnabled)
+                this.setGyroscopeControl(!this.photoSphereViewer.isGyroscopeEnabled())
               }
             }}
           >
