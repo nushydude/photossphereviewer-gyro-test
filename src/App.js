@@ -41,7 +41,7 @@ class App extends React.Component {
       panorama,
       default_fov: 60,
       default_lat: 0,
-      default_long: 90,
+      default_long: 0,
       size: {
         width: window.innerWidth,
         height: window.innerHeight,
