@@ -33,7 +33,7 @@ class App extends React.Component {
       panorama,
       default_fov: 60,
       default_lat: 0,
-      default_long: 0,
+      default_long: 90,
       size: {
         width: window.innerWidth,
         height: window.innerHeight,
@@ -190,7 +190,7 @@ function degreesToRadians(degrees: number) {
 const GlobalStylesPanorama = createGlobalStyle`
   #photosphere {
     z-index: 1;
-  }  
+  }
  
   * {
     user-select: none;
@@ -207,10 +207,9 @@ const RendererContainer = styled.div`
   margin: 0;
   cursor: grab;
   display: block;
-  width: 50%;
-  height: 50%;
+  width: 100%;
+  height: 100%;
   overflow: hidden;
-  background: yellow;
 `;
 
 
