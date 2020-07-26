@@ -16,6 +16,10 @@ const defaultPanoOptions = {
 };
 
 class App extends React.Component {
+  state = {
+    gyroEnabled: false,
+  }
+
   photoSphereViewer = null;
 
   componentDidMount() {
@@ -39,10 +43,13 @@ class App extends React.Component {
     this.photoSphereViewer = new PhotoSphereViewer(options);
 
     this.photoSphereViewer.on('ready', () => {
-      this.setGyroscopeControl(true);
-
       window.addEventListener('resize', this.onResize, false);
     });
+
+    this.photoSphereViewer.on('gyroscope-updated', (enabled: any) => {
+      this.setState({ gyroEnabled: enabled });
+    });
+
   };
 
   onResize = () => {
@@ -114,8 +121,10 @@ class App extends React.Component {
   cleanup = () => {
     if (this.photoSphereViewer) {
       // TODO: Firefox has an issue, so wrapping in a try catch block.
-      try {
-        this.photoSphereViewer.stopGyroscopeControl();
+      try {        
+        if (this.state.gyroEnabled) {
+          this.photoSphereViewer.stopGyroscopeControl();
+        }
       } catch (error) {
         // do nothing
       }
@@ -128,8 +137,6 @@ class App extends React.Component {
 
       window.removeEventListener('resize', this.onResize);
     }
-
-
   };
 
   componentWillUnmount(): void {
@@ -143,7 +150,8 @@ class App extends React.Component {
 
         <RendererContainer id="photosphere" />
 
-        <Button
+        <Buttons>
+          <Button
             onClick={() => {
               if (this.photoSphereViewer) {
                 this.photoSphereViewer.rotate({
@@ -157,6 +165,17 @@ class App extends React.Component {
           >
             Rotate Camera by 90 Deg Clockwise
           </Button>
+
+          <Button
+            onClick={() => {
+              if (this.photoSphereViewer) {
+                this.setGyroscopeControl(!this.state.gyroEnabled)
+              }
+            }}
+          >
+            Toggle Gyro
+          </Button>
+        </Buttons>
       </>
     );
   }
@@ -194,10 +213,16 @@ const RendererContainer = styled.div`
   background: yellow;
 `;
 
-const Button =  styled.button`
+
+const Buttons = styled.div`
   position: fixed;
+  z-index: 2;
   bottom: 30px;
   right: 30px;
+  display: grid;
+  grid-gap: 8px;  
+`;
+
+const Button =  styled.button`
   padding: 15px;
-  z-index: 2;
 `;
