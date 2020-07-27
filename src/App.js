@@ -1,9 +1,10 @@
-import './threeModules';
+// import './threeModules';
 import './photo-sphere-viewer.css';
 import React from 'react';
 import styled, { createGlobalStyle } from 'styled-components'; 
 import { isIOS, isMobileSafari, isSafari, isIPad13 } from 'react-device-detect';
 import * as PhotoSphereViewer from 'photo-sphere-viewer';
+import GyroscopePlugin from "photo-sphere-viewer/dist/plugins/gyroscope";
 import eruda from 'eruda';
 import panorama from './assets/f4399f2b0b4bd8ba8406908b798add0b.jpg';
 
@@ -47,8 +48,9 @@ class App extends React.Component {
         width: window.innerWidth,
         height: window.innerHeight,
       },
+      navbar: ['autorotate'],
       plugins: [
-        PhotoSphereViewer.GyroscopePlugin,
+        GyroscopePlugin,
       ],
     };
 
@@ -180,7 +182,7 @@ class App extends React.Component {
           <Button
             onClick={() => {
               if (this.photoSphereViewer) {
-                const plugin = new this.photoSphereViewer.getPlugin(PhotoSphereViewer.GyroscopePlugin)
+                const plugin = new this.photoSphereViewer.getPlugin(GyroscopePlugin)
                 
                 if (plugin && typeof plugin.isEnabled ===  'function') {
                   console.log('enabled:', plugin.isEnabled());
