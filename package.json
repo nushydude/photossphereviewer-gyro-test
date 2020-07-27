@@ -7,16 +7,14 @@
     "@testing-library/react": "9.3.2",
     "@testing-library/user-event": "7.1.2",
     "eruda": "2.3.3",
-    "photo-sphere-viewer": "3.6.0",
+    "photo-sphere-viewer": "4.0.6",
     "react": "16.13.1",
     "react-device-detect": "1.13.1",
     "react-dom": "16.13.1",
     "react-scripts": "3.4.1",
     "styled-components": "5.1.1",
-    "three": "0.115.0"
-  },
-  "resolutions": {
-    "three": "0.115.0"
+    "three": "0.118.3",
+    "uevent": "2.0.0"
   },
   "scripts": {
     "start": "react-scripts start",

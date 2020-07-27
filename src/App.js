@@ -19,12 +19,12 @@ eruda.init({
 });
 
 const defaultPanoOptions = {
-  time_anim: false,
-  anim_speed: '60dpm',
-  anim_lat: 0,
+  autorotateDelay: false,
+  autorotateSpeed: '60dpm',
+  autorotateLat: 0,
   navbar: false,
-  min_fov: 40,
-  max_fov: 80,
+  minFov: 40,
+  maxFov: 80,
 };
 
 class App extends React.Component {
@@ -34,24 +34,28 @@ class App extends React.Component {
     this.initPhotoSphere();
   }
 
+
   initPhotoSphere = () => {
     const options = {
       ...defaultPanoOptions,
-      container: "photosphere",
+      container: document.querySelector('#photosphere'),
       panorama,
-      default_fov: 60,
-      default_lat: 0,
-      default_long: 0,
+      defaultZoomLvl: 60,
+      defaultLat: 0,
+      defaultLong: 0,
       size: {
         width: window.innerWidth,
         height: window.innerHeight,
       },
+      plugins: [
+        PhotoSphereViewer.GyroscopePlugin,
+      ],
     };
 
-    this.photoSphereViewer = new PhotoSphereViewer(options);
+    this.photoSphereViewer = new PhotoSphereViewer.Viewer(options);
 
     this.photoSphereViewer.on('ready', () => {
-      window.addEventListener('resize', this.onResize, false);
+      // window.addEventListener('resize', this.onResize, false);
     });
   };
 
@@ -142,7 +146,7 @@ class App extends React.Component {
         // do nothing
       }
 
-      window.removeEventListener('resize', this.onResize);
+      // window.removeEventListener('resize', this.onResize);
     }
   };
 
@@ -176,7 +180,13 @@ class App extends React.Component {
           <Button
             onClick={() => {
               if (this.photoSphereViewer) {
-                this.setGyroscopeControl(!this.photoSphereViewer.isGyroscopeEnabled())
+                const plugin = new this.photoSphereViewer.getPlugin(PhotoSphereViewer.GyroscopePlugin)
+                
+                if (plugin && typeof plugin.isEnabled ===  'function') {
+                  console.log('enabled:', plugin.isEnabled());
+                }
+
+                // this.setGyroscopeControl(!this.photoSphereViewer.isGyroscopeEnabled())
               }
             }}
           >
