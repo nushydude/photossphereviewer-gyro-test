@@ -83,17 +83,22 @@ class App extends React.Component {
     this.photoSphereViewer._onResize();
   };
 
-  setGyroscopeControl = (enable: boolean) => {
+  toggleGyroscopeControl = () => {
     if (!this.photoSphereViewer) {
       return;
     }
 
-    if (enable) {
-      this.photoSphereViewer.startGyroscopeControl().catch(this.handleGyroEnableError);
+    const plugin = this.photoSphereViewer.getPlugin(GyroscopePlugin);
+
+    if (plugin && typeof plugin.isEnabled !==  'function') {
+      console.log('plugin issue');
+    }
+
+    if (plugin.isEnabled()) {
+      plugin.stop();
     } else {
-      // this runs without errors even if gyro is unavailable, so no need to catch it
-      this.photoSphereViewer.stopGyroscopeControl();
-    }    
+      plugin.start().catch(this.handleGyroEnableError);
+    }      
   };
 
   handleGyroEnableError = () => {
@@ -182,11 +187,11 @@ class App extends React.Component {
           <Button
             onClick={() => {
               if (this.photoSphereViewer) {
-                const plugin = this.photoSphereViewer.getPlugin(GyroscopePlugin)
+                this.toggleGyroscopeControl();
+
                 
-                if (plugin && typeof plugin.isEnabled ===  'function') {
-                  console.log('enabled:', plugin.isEnabled());
-                }
+                
+                
 
                 // this.setGyroscopeControl(!this.photoSphereViewer.isGyroscopeEnabled())
               }
