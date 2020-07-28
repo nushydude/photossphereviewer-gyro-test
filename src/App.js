@@ -182,7 +182,7 @@ class App extends React.Component {
           <Button
             onClick={() => {
               if (this.photoSphereViewer) {
-                const plugin = new this.photoSphereViewer.getPlugin(GyroscopePlugin)
+                const plugin = this.photoSphereViewer.getPlugin(GyroscopePlugin)
                 
                 if (plugin && typeof plugin.isEnabled ===  'function') {
                   console.log('enabled:', plugin.isEnabled());
