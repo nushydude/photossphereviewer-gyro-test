@@ -2,11 +2,13 @@
 import './photo-sphere-viewer.css';
 import React from 'react';
 import styled, { createGlobalStyle } from 'styled-components'; 
-import { isIOS, isMobileSafari, isSafari, isIPad13 } from 'react-device-detect';
+import { isIOS, isMobileSafari, isSafari, isIPad13, isMobile } from 'react-device-detect';
 import * as PhotoSphereViewer from 'photo-sphere-viewer';
 import GyroscopePlugin from "photo-sphere-viewer/dist/plugins/gyroscope";
 import eruda from 'eruda';
 import panorama from './assets/f4399f2b0b4bd8ba8406908b798add0b.jpg';
+import { OrientationListener } from './OrientationListener';
+import { getCompassHeadingExtra } from './compassHeading';
 
 eruda.init({
   tool: ['console', 'elements'],
@@ -97,7 +99,15 @@ class App extends React.Component {
     if (plugin.isEnabled()) {
       plugin.stop();
     } else {
-      plugin.start().catch(this.handleGyroEnableError);
+      plugin.start().then(() => {        
+        const { longitude, latitude } = this.photoSphereViewer.getPosition();
+        const { heading } = getCompassHeadingExtra();
+
+        this.photoSphereViewer.rotate({
+          longitude: longitude + degreesToRadians(heading),
+          latitude,
+        });
+      }).catch(this.handleGyroEnableError);
     }      
   };
 
@@ -187,19 +197,15 @@ class App extends React.Component {
           <Button
             onClick={() => {
               if (this.photoSphereViewer) {
-                this.toggleGyroscopeControl();
-
-                
-                
-                
-
-                // this.setGyroscopeControl(!this.photoSphereViewer.isGyroscopeEnabled())
+                this.toggleGyroscopeControl();             
               }
             }}
           >
             Toggle Gyro
           </Button>
         </Buttons>
+
+      {isMobile && <OrientationListener />}
       </>
     );
   }
@@ -240,12 +246,12 @@ const RendererContainer = styled.div`
 const Buttons = styled.div`
   position: fixed;
   z-index: 2;
-  bottom: 30px;
-  right: 30px;
+  top: 30px;
+  left: 30px;
   display: grid;
   grid-gap: 8px;  
 `;
 
 const Button =  styled.button`
-  padding: 15px;
+  padding: 20px;
 `;
