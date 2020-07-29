@@ -1,4 +1,4 @@
-import { calcCompassHeading } from './calcCompassHeading';
+// import { calcCompassHeading } from './calcCompassHeading';
 
 let _compassHeading = 0;
 let _accuracy = -1000;
@@ -30,11 +30,11 @@ export function updateCompassHeading(eventData) {
     eventData.beta !== null &&
     eventData.gamma !== null
   ) {
-    compassdir = calcCompassHeading(
-      eventData.alpha,
-      eventData.beta,
-      eventData.gamma
-    );
+    // compassdir = calcCompassHeading(
+    //   eventData.alpha,
+    //   eventData.beta,
+    //   eventData.gamma
+    // );
 
     console.log(`[calc] h: ${compassdir}`);
   } else if (eventData.absolute && eventData.alpha !== null) {
