@@ -100,11 +100,11 @@ class App extends React.Component {
       plugin.stop();
     } else {
       plugin.start().then(() => {        
-        const { longitude, latitude } = this.photoSphereViewer.getPosition();
+        const { latitude } = this.photoSphereViewer.getPosition();
         const { heading } = getCompassHeadingExtra();
 
         this.photoSphereViewer.rotate({
-          longitude: longitude + degreesToRadians(heading),
+          longitude: degreesToRadians(heading),
           latitude,
         });
       }).catch(this.handleGyroEnableError);
@@ -182,16 +182,17 @@ class App extends React.Component {
           <Button
             onClick={() => {
               if (this.photoSphereViewer) {
+                const { latitude } = this.photoSphereViewer.getPosition();
+                const { heading } = getCompassHeadingExtra();
+
                 this.photoSphereViewer.rotate({
-                  longitude:
-                    this.photoSphereViewer.getPosition().longitude +
-                    degreesToRadians(90),
-                  latitude: this.photoSphereViewer.getPosition().latitude,
+                  longitude: degreesToRadians(heading),
+                  latitude,
                 });
               }
             }}
           >
-            Rotate Camera by 90 Deg Clockwise
+            Calibrate with Compasss
           </Button>
 
           <Button
