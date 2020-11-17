@@ -88,66 +88,34 @@ class App extends React.Component {
     this.photoSphereViewer._onResize();
   };
 
-  toggleGyroscopeControl = () => {
-    if (!this.photoSphereViewer) {
-      return;
-    }
+  // toggleGyroscopeControl = () => {
+  //   if (!this.photoSphereViewer) {
+  //     return;
+  //   }
 
-    const plugin = this.photoSphereViewer.getPlugin(GyroscopePlugin);
+  //   const plugin = this.photoSphereViewer.getPlugin(GyroscopePlugin);
 
-    if (plugin && typeof plugin.isEnabled !== "function") {
-      console.log("plugin issue");
-    }
+  //   if (plugin && typeof plugin.isEnabled !== "function") {
+  //     console.log("plugin issue");
+  //   }
 
-    if (plugin.isEnabled()) {
-      plugin.stop();
-    } else {
-      plugin
-        .start()
-        .then(() => {
-          const { latitude } = this.photoSphereViewer.getPosition();
-          const { heading } = getCompassHeadingExtra();
+  //   if (plugin.isEnabled()) {
+  //     plugin.stop();
+  //   } else {
+  //     plugin
+  //       .start()
+  //       .then(() => {
+  //         const { latitude } = this.photoSphereViewer.getPosition();
+  //         const { heading } = getCompassHeadingExtra();
 
-          this.photoSphereViewer.rotate({
-            longitude: degreesToRadians(heading),
-            latitude,
-          });
-        })
-        .catch(this.handleGyroEnableError);
-    }
-  };
-
-  handleGyroEnableError = () => {
-    if ((isIOS && isMobileSafari) || (isIPad13 && isSafari)) {
-      if (
-        // @ts-ignore
-        window.DeviceOrientationEvent !== undefined &&
-        // @ts-ignore
-        typeof window.DeviceOrientationEvent.requestPermission === "function"
-      ) {
-        // @ts-ignore
-        window.DeviceOrientationEvent.requestPermission().then((response) => {
-          if (response !== "granted") {
-            this.showGyroErrorAlert(
-              "Gyroscope permissions have been denied. Please clear the website data from Settings -> Safari -> Advanced -> Website Data, then make sure to refresh the page and tap the Gyroscope icon."
-            );
-          } else {
-            window.location.reload();
-          }
-        });
-      } else {
-        this.showGyroErrorAlert(
-          "Please enable Motion & Orientation Access from Settings -> Safari, then make sure to refresh the page and tap the Gyroscope icon."
-        );
-      }
-    } else {
-      this.showGyroErrorAlert("The Gyroscope is not supported on this device.");
-    }
-  };
-
-  showGyroErrorAlert = (message: string) => {
-    window.alert(message);
-  };
+  //         this.photoSphereViewer.rotate({
+  //           longitude: degreesToRadians(heading),
+  //           latitude,
+  //         });
+  //       })
+  //       .catch(handleGyroEnableError);
+  //   }
+  // };
 
   cleanup = () => {
     if (this.photoSphereViewer) {
@@ -174,32 +142,32 @@ class App extends React.Component {
     this.cleanup();
   }
 
-  updateFOV = (e) => {
-    if (!this.photoSphereViewer) {
-      return;
-    }
+  // updateFOV = (e) => {
+  //   if (!this.photoSphereViewer) {
+  //     return;
+  //   }
 
-    const fovStr = e.target.value;
+  //   const fovStr = e.target.value;
 
-    try {
-      const fov = parseFloat(fovStr);
+  //   try {
+  //     const fov = parseFloat(fovStr);
 
-      console.log("fov:", fov);
+  //     console.log("fov:", fov);
 
-      if (fov < 1 || fov > 179) {
-        window.alert("set between 1 and 179");
-        return;
-      }
+  //     if (fov < 1 || fov > 179) {
+  //       window.alert("set between 1 and 179");
+  //       return;
+  //     }
 
-      const { minFov, maxFov } = defaultPanoOptions;
+  //     const { minFov, maxFov } = defaultPanoOptions;
 
-      const zoom = ((maxFov - fov) * 100) / (maxFov - minFov);
+  //     const zoom = ((maxFov - fov) * 100) / (maxFov - minFov);
 
-      console.log("zoom:", zoom);
+  //     console.log("zoom:", zoom);
 
-      this.photoSphereViewer.zoom(zoom);
-    } catch (error) {}
-  };
+  //     this.photoSphereViewer.zoom(zoom);
+  //   } catch (error) {}
+  // };
 
   render() {
     return (
@@ -208,7 +176,7 @@ class App extends React.Component {
 
         <RendererContainer id="photosphere" />
 
-        <Buttons>
+        {/* <Buttons>
           <Button
             onClick={() => {
               if (this.photoSphereViewer) {
@@ -241,13 +209,42 @@ class App extends React.Component {
           <input type="number" onChange={this.updateFOV} min={1} max={179} />
         </FOVChangerContainer>
 
-        {isMobile && <OrientationListener />}
+        {isMobile && <OrientationListener />} */}
       </>
     );
   }
 }
 
 export default App;
+
+function handleGyroEnableError() {
+  if ((isIOS && isMobileSafari) || (isIPad13 && isSafari)) {
+    if (
+      window.DeviceOrientationEvent !== undefined &&
+      typeof window.DeviceOrientationEvent.requestPermission === "function"
+    ) {
+      window.DeviceOrientationEvent.requestPermission().then((response) => {
+        if (response !== "granted") {
+          showGyroErrorAlert(
+            "Gyroscope permissions have been denied. Please clear the website data from Settings -> Safari -> Advanced -> Website Data, then make sure to refresh the page and tap the Gyroscope icon."
+          );
+        } else {
+          window.location.reload();
+        }
+      });
+    } else {
+      showGyroErrorAlert(
+        "Please enable Motion & Orientation Access from Settings -> Safari, then make sure to refresh the page and tap the Gyroscope icon."
+      );
+    }
+  } else {
+    showGyroErrorAlert("The Gyroscope is not supported on this device.");
+  }
+}
+
+function showGyroErrorAlert(message: string) {
+  window.alert(message);
+}
 
 function degreesToRadians(degrees: number) {
   return degrees * (Math.PI / 180);
