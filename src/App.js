@@ -11,21 +11,21 @@ import {
 } from "react-device-detect";
 import * as PhotoSphereViewer from "photo-sphere-viewer";
 import GyroscopePlugin from "photo-sphere-viewer/dist/plugins/gyroscope";
-import eruda from "eruda";
+// import eruda from "eruda";
 import panorama from "./assets/f4399f2b0b4bd8ba8406908b798add0b.jpg";
 import { OrientationListener } from "./OrientationListener";
 import { getCompassHeadingExtra } from "./compassHeading";
 
-eruda.init({
-  tool: ["console", "elements"],
-  useShadowDom: true,
-  autoScale: true,
-  defaults: {
-    displaySize: 50,
-    transparency: 0.9,
-    theme: "Monokai Pro",
-  },
-});
+// eruda.init({
+//   tool: ["console", "elements"],
+//   useShadowDom: true,
+//   autoScale: true,
+//   defaults: {
+//     displaySize: 50,
+//     transparency: 0.9,
+//     theme: "Monokai Pro",
+//   },
+// });
 
 const defaultPanoOptions = {
   autorotateDelay: false,
@@ -56,7 +56,7 @@ class App extends React.Component {
         height: window.innerHeight,
       },
       navbar: ["autorotate"],
-      plugins: [GyroscopePlugin],
+      // plugins: [GyroscopePlugin],
     };
 
     this.photoSphereViewer = new PhotoSphereViewer.Viewer(options);
@@ -121,22 +121,22 @@ class App extends React.Component {
 
   cleanup = () => {
     if (this.photoSphereViewer) {
+      window.removeEventListener("resize", this.onResize);
+
       // TODO: Firefox has an issue, so wrapping in a try catch block.
-      try {
-        if (this.state.gyroEnabled) {
-          this.photoSphereViewer.stopGyroscopeControl();
-        }
-      } catch (error) {
-        // do nothing
-      }
+      // try {
+      //   if (this.state.gyroEnabled) {
+      //     this.photoSphereViewer.stopGyroscopeControl();
+      //   }
+      // } catch (error) {
+      //   // do nothing
+      // }
 
       try {
         this.photoSphereViewer.destroy();
       } catch (error) {
         // do nothing
       }
-
-      window.removeEventListener("resize", this.onResize);
     }
   };
 
