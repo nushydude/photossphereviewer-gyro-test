@@ -62,30 +62,32 @@ class App extends React.Component {
     this.photoSphereViewer = new PhotoSphereViewer.Viewer(options);
 
     this.photoSphereViewer.on("ready", () => {
-      // window.addEventListener('resize', this.onResize, false);
+      window.addEventListener("resize", this.onResize, false);
     });
   };
 
   onResize = () => {
-    const photoSphereElem = document.querySelector("#photosphere");
+    // const photoSphereElem = document.querySelector("#photosphere");
 
-    if (!photoSphereElem) {
-      return;
+    // if (!photoSphereElem) {
+    //   return;
+    // }
+
+    // // not directly supported :/
+    // // https://github.com/mistic100/Photo-Sphere-Viewer/issues/244
+    // // @ts-ignore
+    // photoSphereElem.style.width = `100%`;
+    // // @ts-ignore
+    // photoSphereElem.style.height = `100%`;
+
+    // this.photoSphereViewer.resize({
+    //   width: "100%",
+    //   height: "100%",
+    // });
+
+    if (this.photoSphereViewer) {
+      this.photoSphereViewer.autoSize();
     }
-
-    // not directly supported :/
-    // https://github.com/mistic100/Photo-Sphere-Viewer/issues/244
-    // @ts-ignore
-    photoSphereElem.style.width = `100%`;
-    // @ts-ignore
-    photoSphereElem.style.height = `100%`;
-
-    this.photoSphereViewer.resize({
-      width: "100%",
-      height: "100%",
-    });
-
-    this.photoSphereViewer._onResize();
   };
 
   toggleGyroscopeControl = () => {
