@@ -80,12 +80,12 @@ class App extends React.Component {
     // // @ts-ignore
     // photoSphereElem.style.height = `100%`;
 
-    // this.photoSphereViewer.resize({
-    //   width: "100%",
-    //   height: "100%",
-    // });
-
     if (this.photoSphereViewer) {
+      this.photoSphereViewer.resize({
+        width: "100%",
+        height: "100%",
+      });
+
       this.photoSphereViewer.autoSize();
     }
   };
@@ -168,7 +168,7 @@ class App extends React.Component {
         // do nothing
       }
 
-      // window.removeEventListener('resize', this.onResize);
+      window.removeEventListener("resize", this.onResize);
     }
   };
 
