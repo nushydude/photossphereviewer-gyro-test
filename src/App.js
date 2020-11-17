@@ -2,19 +2,19 @@
 import "./photo-sphere-viewer.css";
 import React from "react";
 import styled, { createGlobalStyle } from "styled-components";
-import {
-  isIOS,
-  isMobileSafari,
-  isSafari,
-  isIPad13,
-  isMobile,
-} from "react-device-detect";
+// import {
+//   isIOS,
+//   isMobileSafari,
+//   isSafari,
+//   isIPad13,
+//   isMobile,
+// } from "react-device-detect";
 import * as PhotoSphereViewer from "photo-sphere-viewer";
-import GyroscopePlugin from "photo-sphere-viewer/dist/plugins/gyroscope";
+// import GyroscopePlugin from "photo-sphere-viewer/dist/plugins/gyroscope";
 // import eruda from "eruda";
 import panorama from "./assets/f4399f2b0b4bd8ba8406908b798add0b.jpg";
-import { OrientationListener } from "./OrientationListener";
-import { getCompassHeadingExtra } from "./compassHeading";
+// import { OrientationListener } from "./OrientationListener";
+// import { getCompassHeadingExtra } from "./compassHeading";
 
 // eruda.init({
 //   tool: ["console", "elements"],
@@ -108,7 +108,7 @@ class App extends React.Component {
   //       .start()
   //       .then(() => {
   //         const { latitude } = this.photoSphereViewer.getPosition();
-  //         const { heading } = getCompassHeadingExtra();
+  // const { heading } = getCompassHeadingExtra();
 
   //         this.photoSphereViewer.rotate({
   //           longitude: degreesToRadians(heading),
@@ -123,7 +123,6 @@ class App extends React.Component {
     if (this.photoSphereViewer) {
       window.removeEventListener("resize", this.onResize);
 
-      // TODO: Firefox has an issue, so wrapping in a try catch block.
       // try {
       //   if (this.state.gyroEnabled) {
       //     this.photoSphereViewer.stopGyroscopeControl();
@@ -133,6 +132,7 @@ class App extends React.Component {
       // }
 
       try {
+        // TODO: Firefox has an issue, so wrapping in a try catch block.
         this.photoSphereViewer.destroy();
       } catch (error) {
         // do nothing
@@ -183,7 +183,7 @@ class App extends React.Component {
             onClick={() => {
               if (this.photoSphereViewer) {
                 const { latitude } = this.photoSphereViewer.getPosition();
-                const { heading } = getCompassHeadingExtra();
+                // const { heading } = getCompassHeadingExtra();
 
                 this.photoSphereViewer.rotate({
                   longitude: degreesToRadians(heading),
@@ -219,38 +219,38 @@ class App extends React.Component {
 
 export default App;
 
-function handleGyroEnableError() {
-  if ((isIOS && isMobileSafari) || (isIPad13 && isSafari)) {
-    if (
-      window.DeviceOrientationEvent !== undefined &&
-      typeof window.DeviceOrientationEvent.requestPermission === "function"
-    ) {
-      window.DeviceOrientationEvent.requestPermission().then((response) => {
-        if (response !== "granted") {
-          showGyroErrorAlert(
-            "Gyroscope permissions have been denied. Please clear the website data from Settings -> Safari -> Advanced -> Website Data, then make sure to refresh the page and tap the Gyroscope icon."
-          );
-        } else {
-          window.location.reload();
-        }
-      });
-    } else {
-      showGyroErrorAlert(
-        "Please enable Motion & Orientation Access from Settings -> Safari, then make sure to refresh the page and tap the Gyroscope icon."
-      );
-    }
-  } else {
-    showGyroErrorAlert("The Gyroscope is not supported on this device.");
-  }
-}
+// function handleGyroEnableError() {
+//   if ((isIOS && isMobileSafari) || (isIPad13 && isSafari)) {
+//     if (
+//       window.DeviceOrientationEvent !== undefined &&
+//       typeof window.DeviceOrientationEvent.requestPermission === "function"
+//     ) {
+//       window.DeviceOrientationEvent.requestPermission().then((response) => {
+//         if (response !== "granted") {
+//           showGyroErrorAlert(
+//             "Gyroscope permissions have been denied. Please clear the website data from Settings -> Safari -> Advanced -> Website Data, then make sure to refresh the page and tap the Gyroscope icon."
+//           );
+//         } else {
+//           window.location.reload();
+//         }
+//       });
+//     } else {
+//       showGyroErrorAlert(
+//         "Please enable Motion & Orientation Access from Settings -> Safari, then make sure to refresh the page and tap the Gyroscope icon."
+//       );
+//     }
+//   } else {
+//     showGyroErrorAlert("The Gyroscope is not supported on this device.");
+//   }
+// }
 
-function showGyroErrorAlert(message: string) {
-  window.alert(message);
-}
+// function showGyroErrorAlert(message: string) {
+//   window.alert(message);
+// }
 
-function degreesToRadians(degrees: number) {
-  return degrees * (Math.PI / 180);
-}
+// function degreesToRadians(degrees: number) {
+//   return degrees * (Math.PI / 180);
+// }
 
 const GlobalStylesPanorama = createGlobalStyle`
   #photosphere {
@@ -277,24 +277,24 @@ const RendererContainer = styled.div`
   overflow: hidden;
 `;
 
-const Buttons = styled.div`
-  position: fixed;
-  z-index: 2;
-  top: 30px;
-  left: 30px;
-  display: grid;
-  grid-gap: 8px;
-`;
+// const Buttons = styled.div`
+//   position: fixed;
+//   z-index: 2;
+//   top: 30px;
+//   left: 30px;
+//   display: grid;
+//   grid-gap: 8px;
+// `;
 
-const FOVChangerContainer = styled.div`
-  position: fixed;
-  z-index: 2;
-  top: 150px;
-  left: 30px;
-  display: grid;
-  grid-gap: 8px;
-`;
+// const FOVChangerContainer = styled.div`
+//   position: fixed;
+//   z-index: 2;
+//   top: 150px;
+//   left: 30px;
+//   display: grid;
+//   grid-gap: 8px;
+// `;
 
-const Button = styled.button`
-  padding: 20px;
-`;
+// const Button = styled.button`
+//   padding: 20px;
+// `;
