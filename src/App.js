@@ -56,7 +56,6 @@ class App extends React.Component {
         width: window.innerWidth,
         height: window.innerHeight,
       },
-      navbar: ["autorotate"],
       plugins: [GyroscopePlugin, StereoPlugin],
       lang: {
         stereo: "Stereo view",
