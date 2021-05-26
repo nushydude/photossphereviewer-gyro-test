@@ -10,7 +10,7 @@ import styled, { createGlobalStyle } from "styled-components";
 //   isMobile,
 // } from "react-device-detect";
 import * as PhotoSphereViewer from "photo-sphere-viewer";
-// import GyroscopePlugin from "photo-sphere-viewer/dist/plugins/gyroscope";
+import StereoPlugin from "photo-sphere-viewer/dist/plugins/stereo";
 // import eruda from "eruda";
 import panorama from "./assets/f4399f2b0b4bd8ba8406908b798add0b.jpg";
 // import { OrientationListener } from "./OrientationListener";
@@ -56,7 +56,12 @@ class App extends React.Component {
         height: window.innerHeight,
       },
       navbar: ["autorotate"],
-      // plugins: [GyroscopePlugin],
+      plugins: [StereoPlugin],
+      lang: {
+        stereo: "Stereo view",
+        stereoNotification: "Click anywhere to exit stereo view.",
+        pleaseRotate: ["Please rotate your device", "(or tap to continue)"],
+      },
     };
 
     this.photoSphereViewer = new PhotoSphereViewer.Viewer(options);
